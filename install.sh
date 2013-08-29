@@ -8,11 +8,16 @@ cp -f libs/instantclient-basic-macos.x32-11.2.0.3.0.zip /usr/local/cxoracle
 cp -f libs/instantclient-sdk-macos.x32-11.2.0.3.0.zip /usr/local/cxoracle
 cp -f libs/cx_Oracle-5.1.2.zip /usr/local/cxoracle
 
-cd /usr/local/cxoracle 
+cd /usr/local/cxoracle
 
-unzip /usr/local/cxoracle/instantclient-basic-macos.x32-11.2.0.3.0.zip
-unzip /usr/local/cxoracle/instantclient-sdk-macos.x32-11.2.0.3.0.zip
-unzip /usr/local/cxoracle/cx_Oracle-5.1.2.zip 
+if ! [ -d /usr/local/cxoracle/instantclient_11_2/ ]; then
+	unzip /usr/local/cxoracle/instantclient-basic-macos.x32-11.2.0.3.0.zip
+	unzip /usr/local/cxoracle/instantclient-sdk-macos.x32-11.2.0.3.0.zip
+fi
+
+if ! [ -d /usr/local/cxoracle/cx_Oracle-5.1.2 ]; then
+	unzip /usr/local/cxoracle/cx_Oracle-5.1.2.zip 
+fi
 
 ln -s /usr/local/cxoracle/instantclient_11_2/libclntsh.dylib.11.1 /usr/local/cxoracle/instantclient_11_2/libclntsh.dylib
 ln -s /usr/local/cxoracle/instantclient_11_2/libocci.dylib.11.1 /usr/local/cxoracle/instantclient_11_2/libocci.dylib
@@ -25,10 +30,13 @@ if ! grep -q ORACLE_HOME ~/.bash_profile;
 	echo "export VERSIONER_PYTHON_PREFER_32_BIT=yes" >> ~/.bash_profile
 	echo "export PATH=$PATH:$ORACLE_HOME" >> ~/.bash_profile
 fi
- 
 
-sudo python /usr/local/cxoracle/cx_Oracle-5.1.2/setup.py build
-sudo python /usr/local/cxoracle/cx_Oracle-5.1.2/setup.py install
+export ARCHFLAGS="-arch x86_64"
+
+cd /usr/local/cxoracle/cx_Oracle-5.1.2/
+
+sudo python setup.py build
+sudo python setup.py install
 
 rm /usr/local/cxoracle/instantclient-basic-macos.x32-11.2.0.3.0.zip
 rm /usr/local/cxoracle/instantclient-sdk-macos.x32-11.2.0.3.0.zip
