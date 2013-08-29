@@ -22,13 +22,20 @@ fi
 ln -s /usr/local/cxoracle/instantclient_11_2/libclntsh.dylib.11.1 /usr/local/cxoracle/instantclient_11_2/libclntsh.dylib
 ln -s /usr/local/cxoracle/instantclient_11_2/libocci.dylib.11.1 /usr/local/cxoracle/instantclient_11_2/libocci.dylib
 
+sed -n '/LD_LIBRARY_PATH/!p' ~/.bash_profile > temp.txt
+mv temp.txt  ~/.bash_profile
+
 if ! grep -q ORACLE_HOME ~/.bash_profile; 
   then
     echo "export ORACLE_HOME=/usr/local/cxoracle/instantclient_11_2" >> ~/.bash_profile
-	echo "export LD_LIBRARY_PATH=$ORACLE_HOME" >> ~/.bash_profile
-	echo "export DYLD_LIBRARY_PATH=$ORACLE_HOME" >> ~/.bash_profile
-	echo "export VERSIONER_PYTHON_PREFER_32_BIT=yes" >> ~/.bash_profile
 	echo "export PATH=$PATH:$ORACLE_HOME" >> ~/.bash_profile
+	echo "export VERSIONER_PYTHON_PREFER_32_BIT=yes" >> ~/.bash_profile
+fi
+                                        
+if ! grep -q LD_LIBRARY_PATH ~/.bash_profile; 
+  then
+   echo "export LD_LIBRARY_PATH=/usr/local/cxoracle/instantclient_11_2" >> ~/.bash_profile
+   echo "export DYLD_LIBRARY_PATH=/usr/local/cxoracle/instantclient_11_2" >> ~/.bash_profile
 fi
 
 export ARCHFLAGS="-arch x86_64"
