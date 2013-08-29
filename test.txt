@@ -1,6 +1,0 @@
-export GRAILS_HOME=/Users/bkrochik/Documents/grails-2.2.1/
-export PATH=$JAVA_HOME/bin:$GRAILS_HOME/bin:$PATH 
-export JAVA_HOME=/Library/Java/Home
-export ORACLE_HOME=/usr/local/oracle/instantclient_11_2
-export VERSIONER_PYTHON_PREFER_32_BIT=yes
-export PATH=/bin:/Users/bkrochik/Documents/grails-2.2.1//bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/usr/local/git/bin:/usr/local/oracle/instantclient_11_2
