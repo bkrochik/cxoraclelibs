@@ -1,0 +1,5 @@
+cx_Oracle.c
+cx_Oracle.egg-info/PKG-INFO
+cx_Oracle.egg-info/SOURCES.txt
+cx_Oracle.egg-info/dependency_links.txt
+cx_Oracle.egg-info/top_level.txt
