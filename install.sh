@@ -2,9 +2,9 @@
 
 echo "Starting........."
 
-cp -f /libs/instantclient-basic-macos.x32-11.2.0.3.0.zip /usr/local/oracle
-cp -f /libs/instantclient-sdk-macos.x32-11.2.0.3.0.zip /usr/local/oracle
-cp -f /libs/cx_Oracle-5.1.2.zip /usr/local/oracle
+cp -f libs/instantclient-basic-macos.x32-11.2.0.3.0.zip /usr/local/oracle
+cp -f libs/instantclient-sdk-macos.x32-11.2.0.3.0.zip /usr/local/oracle
+cp -f libs/cx_Oracle-5.1.2.zip /usr/local/oracle
 
 cd /usr/local/oracle 
 
