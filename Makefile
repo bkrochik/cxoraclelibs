@@ -5,4 +5,4 @@ install:
 	@sudo sh install.sh
 
 test:
-	@python scripts/$(name).py
+	@python tests/$(name).py
