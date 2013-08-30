@@ -46,40 +46,38 @@ class TestSequenceFunctions(unittest.TestCase):
     def test1_insert_on_main_charges(self): 
         #Consultas
         cur.execute('select * from MAIN_CHARGES where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
-        resultset = cur.fetchall()
+
+        #Armo diccionario de datos
+        fieldNumber = 0
+        fieldNames={}
+        for desc in cur.description:
+            fieldNames[desc[0]]=fieldNumber
+            fieldNumber+=1
+        result= cur.fetchall()
 
         #Cantidad de registros insertados
-        self.assertEqual(len(resultset),1)
+        self.assertEqual(len(result),1)
 
-        #Valores insertados
-        for CHARGE_ID,CUST_ID,SITE_ID,AMOUNT,CURRENCY_ID,TYPE,STATUS,MARKETPLACE,DATE_CREATED,LAST_MODIFIED,CHARGE_DATE_CREATED,FROM_ID in resultset:
-            self.assertEqual(CHARGE_ID,self.chargeId)
-            self.assertEqual(CUST_ID,self.custId)
-            self.assertEqual(SITE_ID,self.siteId)
-            self.assertEqual(AMOUNT,self.unitPrice*self.quantity)
-            self.assertEqual(CURRENCY_ID,self.currencyId)
-            self.assertEqual(TYPE,self.type)
+        for row in result:
+            self.assertEqual(row[fieldNames['CHARGE_ID']],self.chargeId)
+            self.assertEqual(row[fieldNames['CUST_ID']],self.custId)
+            self.assertEqual(row[fieldNames['SITE_ID']],self.siteId)
+            self.assertEqual(row[fieldNames['AMOUNT']],self.unitPrice*self.quantity)
+            self.assertEqual(row[fieldNames['TYPE']],self.type)
+            self.assertEqual(row[fieldNames['CHARGE_DATE_CREATED']],self.chargeDateCreated)
+            self.assertEqual(row[fieldNames['FROM_ID']],self.fromId)
 
             #Status transformation
             if self.status=='I':
-                self.assertEqual(STATUS,'I')
+                self.assertEqual(row[fieldNames['STATUS']],'I')
             else:
-                self.assertEqual(STATUS,'A')
-
-            #self.assertEqual(MARKETPLACE,self.marketplace)
-            self.assertEqual(DATE_CREATED,self.dateCreated)
-            self.assertEqual(CHARGE_DATE_CREATED,self.chargeDateCreated)
-            self.assertEqual(FROM_ID,self.fromId)
-
+                self.assertEqual(row[fieldNames['STATUS']],'A')
 
     def test2_insert_on_syi_order(self):
         #Consultas
         cur.execute('select * from SYI_ORDER where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
-        resultset = cur.fetchall()
-
+        
         if self.itemId != None or self.quantity != None or self.unitPrice != None:
-            #Cantidad de registros insertados
-            self.assertEqual(len(resultset),1)
         
             #Armo diccionario de datos
             fieldNumber = 0
@@ -88,13 +86,16 @@ class TestSequenceFunctions(unittest.TestCase):
                 fieldNames[desc[0]]=fieldNumber
                 fieldNumber+=1
             result = cur.fetchall()
+            
+            #Cantidad de registros insertados
+            self.assertEqual(len(result),1)
 
             #Valores insertados
             for row in result:
-                self.assertEqual(row['CHARGE_ID'],self.chargeId)
-                self.assertEqual(row['ITEM_ID'],self.itemId)
-                self.assertEqual(row['QUANTITY'],self.quantity)
-                self.assertEqual(row['UNIT_PRICE'],self.unitPrice)
+                self.assertEqual(row[fieldNames['CHARGE_ID']],self.chargeId)
+                self.assertEqual(row[fieldNames['ITEM_ID']],self.itemId)
+                self.assertEqual(row[fieldNames['QUANTITY']],self.quantity)
+                self.assertEqual(row[fieldNames['UNIT_PRICE']],self.unitPrice)
         else:
             #Cantidad de registros insertados
             self.assertEqual(len(resultset),0)
@@ -102,12 +103,9 @@ class TestSequenceFunctions(unittest.TestCase):
     def test3_insert_on_pms(self):
         #Consultas
         cur.execute('select * from PMS where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
-        resultset = cur.fetchall()
-
+     
         if self.affPymntCharge != None or self.affSiteCharge != None or self.affChargePrice != None:
-            #Cantidad de registros insertados
-            self.assertEqual(len(resultset),1)
-            
+
             #Armo diccionario de datos
             fieldNumber = 0
             fieldNames={}
@@ -115,13 +113,16 @@ class TestSequenceFunctions(unittest.TestCase):
                 fieldNames[desc[0]]=fieldNumber
                 fieldNumber+=1
             result = cur.fetchall()
+            
+            #Cantidad de registros insertados
+            self.assertEqual(len(result),1)
 
             #Valores insertados
             for row in result:
-                self.assertEqual(row['CHARGE_ID'],self.chargeId)
-                self.assertEqual(row['AFF_PYMNT_CHARGE'],self.affPymntCharge)
-                self.assertEqual(row['AFF_SITE_CHARGE'],self.affSiteCharge)
-                self.assertEqual(row['AFF_CHARGE_PRICE'],self.affChargePrice)
+                self.assertEqual(row[fieldNames['CHARGE_ID']],self.chargeId)
+                self.assertEqual(row[fieldNames['AFF_PYMNT_CHARGE']],self.affPymntCharge)
+                self.assertEqual(row[fieldNames['AFF_SITE_CHARGE']],self.affSiteCharge)
+                self.assertEqual(row[fieldNames['AFF_CHARGE_PRICE']],self.affChargePrice)
 
         else:
             #Cantidad de registros insertados
@@ -130,11 +131,8 @@ class TestSequenceFunctions(unittest.TestCase):
     def test4_insert_on_other_main_charges_data(self):
         #Consultas
         cur.execute('select * from OTHER_MAIN_CHARGES_DATA where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
-        resultset = cur.fetchall()
-
+     
         if self.origCurrency != None or self.oringUnitPrice != None or self.origItemCurrency != None or self.origItemUnitPrice != None or self.collectedAmount != None:
-            #Cantidad de registros insertados
-            self.assertEqual(len(resultset),1)
 
              #Armo diccionario de datos
             fieldNumber = 0
@@ -144,14 +142,17 @@ class TestSequenceFunctions(unittest.TestCase):
                 fieldNumber+=1
             result = cur.fetchall()
 
+            #Cantidad de registros insertados
+            self.assertEqual(len(result),1)
+
             #Valores insertados
             for row in result:
-                self.assertEqual(row['CHARGE_ID'],self.chargeId)
-                self.assertEqual(row['ORIG_CURRENCY'],self.origCurrency)
-                self.assertEqual(row['ORIG_UNIT_PRICE'],self.oringUnitPrice)
-                self.assertEqual(row['ORIG_ITEM_CURRENCY'],self.origItemCurrency)
-                self.assertEqual(row['ORIG_ITEM_UNIT_PRICE'],self.origItemUnitPrice)
-                self.assertEqual(row['COLLECTED_AMOUNT'],self.collectedAmount)
+                self.assertEqual(row[fieldNames['CHARGE_ID']],self.chargeId)
+                self.assertEqual(row[fieldNames['ORIG_CURRENCY']],self.origCurrency)
+                self.assertEqual(row[fieldNames['ORIG_UNIT_PRICE']],self.oringUnitPrice)
+                self.assertEqual(row[fieldNames['ORIG_ITEM_CURRENCY']],self.origItemCurrency)
+                self.assertEqual(row[fieldNames['ORIG_ITEM_UNIT_PRICE']],self.origItemUnitPrice)
+                self.assertEqual(row[fieldNames['COLLECTED_AMOUNT']],self.collectedAmount)
 
         else:
             #Cantidad de registros insertados
@@ -160,10 +161,6 @@ class TestSequenceFunctions(unittest.TestCase):
     def test5_insert_on_feed_charges(self):
         #Consultas
         cur.execute('select * from FEED_CHARGES where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
-        resultset = cur.fetchall()
-
-        #Cantidad de registros insertados
-        self.assertEqual(len(resultset),1)
 
         #Armo diccionario de datos
         fieldNumber = 0
@@ -172,22 +169,25 @@ class TestSequenceFunctions(unittest.TestCase):
             fieldNames[desc[0]]=fieldNumber
             fieldNumber+=1
         result = cur.fetchall()
+            
+        #Cantidad de registros insertados
+        self.assertEqual(len(result),1)
 
          #Valores insertados
         for row in result:
-            self.assertEqual(row[fieldNames['CUST_ID']],self.chargeId)
+            self.assertEqual(row[fieldNames['CHARGE_ID']],self.chargeId)
             self.assertEqual(row[fieldNames['TYPE']],'C')
-            self.assertEqual(row[fieldNames['CHARGE_DT']],self.chargeDateCreated)
+            self.assertEqual(row[fieldNames['CHARGE_DATE']],self.chargeDateCreated)
     
     def test6_delete_loaded_data(self):
         #Delete test 
         try:
-         #   cur.execute('delete from CHARGES where CHARGE_ID = %s' % (self.chargeId))
-          #  cur.execute('delete from MAIN_CHARGES where CHARGE_ID = %s' % (self.chargeId))
-           # cur.execute('delete from FEED_CHARGES where CHARGE_ID = %s' % (self.chargeId))
-            #cur.execute('delete from PMS where CHARGE_ID = %s' % (self.chargeId))
-            #cur.execute('delete from SYI_ORDER where CHARGE_ID = %s' % (self.chargeId))
-            #cur.execute('delete from OTHER_MAIN_CHARGES_DATA where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from CHARGES where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from MAIN_CHARGES where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from FEED_CHARGES where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from PMS where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from SYI_ORDER where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from OTHER_MAIN_CHARGES_DATA where CHARGE_ID = %s' % (self.chargeId))
             self.assertTrue(1,1)  
         except ValueError:
             self.assertTrue(1,2)
