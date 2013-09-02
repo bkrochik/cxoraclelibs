@@ -4,6 +4,15 @@ sys.path.append('libs')
 import dbConnection
 
 class TestSequenceFunctions(unittest.TestCase):
+    
+    @staticmethod
+    def createDict(cursor):
+        fieldNumber = 0
+        fieldNames={}
+        for desc in cursor.description:
+            fieldNames[desc[0]]=fieldNumber
+            fieldNumber+=1
+        return [cursor.fetchall(),fieldNames]
 
     def setUp(self):
         #Insert test data
@@ -13,12 +22,9 @@ class TestSequenceFunctions(unittest.TestCase):
         cur.execute('select * from CHARGES where rownum<=1 order by TIMESTAMP desc')
 
         #Armo diccionario de datos
-        fieldNumber = 0
-        fieldNames={}
-        for desc in cur.description:
-            fieldNames[desc[0]]=fieldNumber
-            fieldNumber+=1
-        result= cur.fetchall()
+        dict=self.createDict(cur);
+        result=dict[0]
+        fieldNames=dict[1]
 
         for row in result:
             self.chargeId=row[fieldNames['CHARGE_ID']]
@@ -48,12 +54,9 @@ class TestSequenceFunctions(unittest.TestCase):
         cur.execute('select * from MAIN_CHARGES where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
 
         #Armo diccionario de datos
-        fieldNumber = 0
-        fieldNames={}
-        for desc in cur.description:
-            fieldNames[desc[0]]=fieldNumber
-            fieldNumber+=1
-        result= cur.fetchall()
+        dict=self.createDict(cur);
+        result=dict[0]
+        fieldNames=dict[1]
 
         #Cantidad de registros insertados
         self.assertEqual(len(result),1)
@@ -80,12 +83,9 @@ class TestSequenceFunctions(unittest.TestCase):
         if self.itemId != None or self.quantity != None or self.unitPrice != None:
         
             #Armo diccionario de datos
-            fieldNumber = 0
-            fieldNames={}
-            for desc in cur.description:
-                fieldNames[desc[0]]=fieldNumber
-                fieldNumber+=1
-            result = cur.fetchall()
+            dict=self.createDict(cur);
+            result=dict[0]
+            fieldNames=dict[1]
             
             #Cantidad de registros insertados
             self.assertEqual(len(result),1)
@@ -107,12 +107,9 @@ class TestSequenceFunctions(unittest.TestCase):
         if self.affPymntCharge != None or self.affSiteCharge != None or self.affChargePrice != None:
 
             #Armo diccionario de datos
-            fieldNumber = 0
-            fieldNames={}
-            for desc in cur.description:
-                fieldNames[desc[0]]=fieldNumber
-                fieldNumber+=1
-            result = cur.fetchall()
+            dict=self.createDict(cur);
+            result=dict[0]
+            fieldNames=dict[1]
             
             #Cantidad de registros insertados
             self.assertEqual(len(result),1)
@@ -134,13 +131,10 @@ class TestSequenceFunctions(unittest.TestCase):
      
         if self.origCurrency != None or self.oringUnitPrice != None or self.origItemCurrency != None or self.origItemUnitPrice != None or self.collectedAmount != None:
 
-             #Armo diccionario de datos
-            fieldNumber = 0
-            fieldNames={}
-            for desc in cur.description:
-                fieldNames[desc[0]]=fieldNumber
-                fieldNumber+=1
-            result = cur.fetchall()
+            #Armo diccionario de datos
+            dict=self.createDict(cur);
+            result=dict[0]
+            fieldNames=dict[1]
 
             #Cantidad de registros insertados
             self.assertEqual(len(result),1)
@@ -163,12 +157,9 @@ class TestSequenceFunctions(unittest.TestCase):
         cur.execute('select * from FEED_CHARGES where CHARGE_ID=%s and rownum<=1' % (self.chargeId))
 
         #Armo diccionario de datos
-        fieldNumber = 0
-        fieldNames={}
-        for desc in cur.description:
-            fieldNames[desc[0]]=fieldNumber
-            fieldNumber+=1
-        result = cur.fetchall()
+        dict=self.createDict(cur);
+        result=dict[0]
+        fieldNames=dict[1]
             
         #Cantidad de registros insertados
         self.assertEqual(len(result),1)
