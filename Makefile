@@ -6,3 +6,6 @@ install:
 
 test:
 	@python tests/$(name).py
+
+test-all:
+	@python -m unittest discover tests '*.py'

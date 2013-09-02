@@ -48,8 +48,8 @@ class TestSequenceFunctions(unittest.TestCase):
             dict=self.createDict(cur);
             result=dict[0]
 
-            #Cantidad de registros insertados
-            self.assertEqual(len(result),2)
+            #Cantidad de registros insertados por error
+            self.assertEqual(len(result),1)
 
             #Borro logs de error
             cur.execute('delete from CHARGES_ERRORS where CHARGE_ID = %s' % (self.chargeId))

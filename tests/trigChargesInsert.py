@@ -179,6 +179,7 @@ class TestSequenceFunctions(unittest.TestCase):
             cur.execute('delete from PMS where CHARGE_ID = %s' % (self.chargeId))
             cur.execute('delete from SYI_ORDER where CHARGE_ID = %s' % (self.chargeId))
             cur.execute('delete from OTHER_MAIN_CHARGES_DATA where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from CHARGES_ERRORS where CHARGE_ID = %s' % (self.chargeId))
             db.commit()
             self.assertTrue(1,1)  
         except ValueError:

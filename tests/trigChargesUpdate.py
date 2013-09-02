@@ -21,7 +21,7 @@ class TestSequenceFunctions(unittest.TestCase):
         #Update
         cur.execute("UPDATE CHARGES SET SITE_ID='MLA',ITEM_ID=123,AFF_PYMNT_CHARGE='123',ORIG_CURRENCY='TST',CHARGE_TYPE_ID='BV' WHERE CHARGE_ID=4112095")
         db.commit()
-        #Obtengo el id del insertado
+        #Obtengo el id del cargo actualizado
         cur.execute('select * from CHARGES where rownum<=1 order by TIMESTAMP desc')
        
         #Armo diccionario de datos
@@ -61,7 +61,7 @@ class TestSequenceFunctions(unittest.TestCase):
         result=dict[0]
         fieldNames=dict[1]
 
-        #Cantidad de registros insertados
+        #Cantidad de registros actualizados
         self.assertEqual(len(result),1)
 
         for row in result:
@@ -78,14 +78,14 @@ class TestSequenceFunctions(unittest.TestCase):
             result=dict[0]
             fieldNames=dict[1]
             
-            #Cantidad de registros insertados
+            #Cantidad de registros actualizados
             self.assertEqual(len(result),1)
 
             #Valores insertados
             for row in result:
                 self.assertEqual(row[fieldNames['ITEM_ID']],123)
         else:
-            #Cantidad de registros insertados
+            #Cantidad de registros actualizados
             self.assertEqual(len(resultset),0)
 
     def test3_update_on_pms(self):
@@ -99,7 +99,7 @@ class TestSequenceFunctions(unittest.TestCase):
             result=dict[0]
             fieldNames=dict[1]
             
-            #Cantidad de registros insertados
+            #Cantidad de registros actualizados
             self.assertEqual(len(result),1)
 
             #Valores insertados
@@ -107,7 +107,7 @@ class TestSequenceFunctions(unittest.TestCase):
                 self.assertEqual(row[fieldNames['AFF_PYMNT_CHARGE']],123)
 
         else:
-            #Cantidad de registros insertados
+            #Cantidad de registros actualizados
             self.assertEqual(len(resultset),0)
 
     def test4_update_on_other_main_charges_data(self):
@@ -121,7 +121,7 @@ class TestSequenceFunctions(unittest.TestCase):
             result=dict[0]
             fieldNames=dict[1]
 
-            #Cantidad de registros insertados
+            #Cantidad de registros actualizados
             self.assertEqual(len(result),1)
 
             #Valores insertados
@@ -144,9 +144,9 @@ class TestSequenceFunctions(unittest.TestCase):
         #Cantidad de registros insertados
         self.assertEqual(len(result),1)
 
-         #Valores insertados
+         #Valores actualizados
         for row in result:
-            self.assertEqual(row[fieldNames['TYPE']],'B')
+            self.assertEqual(row[fieldNames['TYPE']],'C')
     
     def test6_delete_loaded_data(self):
         #Delete test 
@@ -157,6 +157,7 @@ class TestSequenceFunctions(unittest.TestCase):
             cur.execute('delete from PMS where CHARGE_ID = %s' % (self.chargeId))
             cur.execute('delete from SYI_ORDER where CHARGE_ID = %s' % (self.chargeId))
             cur.execute('delete from OTHER_MAIN_CHARGES_DATA where CHARGE_ID = %s' % (self.chargeId))
+            cur.execute('delete from CHARGES_ERRORS where CHARGE_ID = %s' % (self.chargeId))
             db.commit()
             self.assertTrue(1,1)  
         except ValueError:
