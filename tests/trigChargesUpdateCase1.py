@@ -75,7 +75,7 @@ class TestSequenceFunctions(unittest.TestCase):
             self.assertEqual(row[fieldNames['SITE_ID']],self.siteId)
             self.assertEqual(row[fieldNames['AMOUNT']],self.unitPrice*self.quantity)
             self.assertEqual(row[fieldNames['TYPE']],self.type)
-            self.assertEqual(row[fieldNames['CHARGE_DATE_CREATED']],self.chargeDateCreated)
+            self.assertEqual(row[fieldNames['CHARGE_DATE']],self.chargeDateCreated)
 
             #Status transformation
             if self.status=='I':
